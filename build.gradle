@@ -1,0 +1,26 @@
+task tarTextFiles(type: Tar) {
+    archiveFileName = "textFiles.tar"
+    destinationDirectory = file('build/distribution')
+    from 'text'
+    compression = Compression.GZIP
+
+    doFirst {
+        println "Creating tar file..."
+    }
+}
+
+task copyFiles(type: Copy) {
+    from 'src'
+    include '*.txt'
+    into 'text/'
+    rename '(.+).txt', '$1.text'
+
+    doFirst {
+        println "Copying txt files..."
+    }
+}
+
+task createArchive {
+    dependsOn 'copyFiles'
+    dependsOn 'tarTextFiles'
+}
